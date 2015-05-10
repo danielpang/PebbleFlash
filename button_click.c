@@ -2,25 +2,23 @@
 
 static Window *window;
 static TextLayer *text_layer;
-// static bool flash = true;
+static bool flash = true;
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Select");
-  light_enable(true);
-}
-
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Up");
-}
-
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(text_layer, "Down");
+  if (flash == false){
+    light_enable(true);
+    flash = true;
+    text_layer_set_text(text_layer, "Flash: ON");
+  } else {
+    light_enable(false);
+    flash = false;
+    text_layer_set_text(text_layer, "Flash: OFF");
+  }
+  
 }
 
 static void click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
-  window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_handler);
 }
 
 static void window_load(Window *window) {
@@ -29,9 +27,10 @@ static void window_load(Window *window) {
 
   text_layer = text_layer_create((GRect) { .origin = { 0, 72 }, .size = { bounds.size.w, 20 } });
   text_layer_set_background_color(text_layer, GColorClear);
-  text_layer_set_text(text_layer, "Press a button");
+  text_layer_set_text(text_layer, "Pebble Flash");
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  light_enable(true);
 }
 
 static void window_unload(Window *window) {
