@@ -2,8 +2,12 @@
 
 static Window *window;
 static TextLayer *text_layer;
+
+// Turns the flash on once the watchapp is opened.
 static bool flash = true;
 
+// Turns on the flash is the flash is currently off, or turns off the flash
+// if the flash is currently on by pressing the select button of the pebble
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   if (flash == false){
     light_enable(true);
@@ -37,6 +41,7 @@ static void window_unload(Window *window) {
   text_layer_destroy(text_layer);
 }
 
+// Initializes the app by creating the main window
 static void init(void) {
   window = window_create();
   window_set_click_config_provider(window, click_config_provider);
@@ -48,6 +53,8 @@ static void init(void) {
   window_stack_push(window, animated);
 }
 
+// Destroys the app by deallocating the memory 
+// and by turning off the flash
 static void deinit(void) {
   light_enable(false);
   window_destroy(window);
